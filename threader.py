@@ -4,18 +4,18 @@ import threading
 import os
 import subprocess
 
-## This script threads out the shell calls in file calls.list
+## This script threads out the shell calls in file threadme.txt
 threads = 4    ## Specify total number of threads here
 
 lock = threading.Lock()
 def threader():
-	while os.stat('calls.list').st_size >0:
-		## Run 1st call from calls.list, then delete that line
+	while os.stat('threadme.txt').st_size >0:
+		## Run 1st call from threadme.txt, then delete that line
 		with lock:
-			f = open('calls.list','rb')
+			f = open('threadme.txt','rb')
 			call = f.readline()
-			subprocess.call("tail -n +2 calls.list > smaller.tmp",shell=True)
-			os.rename("smaller.tmp","calls.list")
+			subprocess.call("tail -n +2 threadme.txt > smaller.tmp",shell=True)
+			os.rename("smaller.tmp","threadme.txt")
 			f.close()
 		subprocess.call(call,shell=True)
 		if call != "":
