@@ -16,10 +16,10 @@ def threader():
 			call = f.readline()
 			subprocess.call("tail -n +2 calls.list > smaller.tmp",shell=True)
 			os.rename("smaller.tmp","calls.list")
+			f.close()
 		subprocess.call(call,shell=True)
 		if call != "":
 			print(threading.current_thread().name + " did call: " + call)
-		f.close()
 	print(threading.current_thread().name + " terminated")
 		
 for t in range(threads):
