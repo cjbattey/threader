@@ -12,6 +12,9 @@ import threading
 import os
 import subprocess
 
+# Make backup copy of threadme.txt
+subprocess.call("cp threadme.txt threadme.bak",shell=True)
+
 # Only one thread at a time can open the lock
 lock = threading.Lock()
 
@@ -33,7 +36,18 @@ def threader():
 			print(threading.current_thread().name + " did call: " + call)
 	print(threading.current_thread().name + " terminated")
 
-# Spawn the threads		
+# Create threads and tell them to run threader function
+threadlist = []
 for t in range(threads):
-	threading.Thread(target = threader).start()
-	print("Thread-" + str(t+1) + " spawned")
+	threadlist.append(threading.Thread(target = threader))
+	print("Thread-" + str(t+1) + " started") # Technically a white lie...
+
+# Actually start the threads
+[x.start() for x in threadlist]
+
+# Wait for all threads to finish
+[x.join() for x in threadlist]
+
+# Restore backup of threadme.txt
+os.rename("threadme.bak","threadme.txt")
+print("All threading finished")
